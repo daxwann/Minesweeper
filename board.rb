@@ -20,7 +20,11 @@ class Board
     def initialize(size, bombs)
         @size = size
         @bombs = bombs
-        @tiles = create_board(size, bombs)
+        @tiles
+    end
+
+    def create_new
+        @tiles = create_board(@size, @bombs)
     end
 
     def create_board(size, bombs)
