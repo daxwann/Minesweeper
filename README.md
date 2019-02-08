@@ -1,6 +1,6 @@
 # Minesweeper
 
-Build Minesweeper game with save/load functionality using YAML and cursor input.
+Build Minesweeper game with save/load functionality using YAML.
 
 ## Learning Goals
 
