@@ -3,27 +3,26 @@ require_relative "./board"
 class Tile
 
     def initialize(tag, coord, board)
-        @bomb = tag == -1
+        @bomb = tag == 'b'
         @adj_bombs = count_adj_bombs(tag, coord, board)
         @flagged = false
         @revealed = false
     end
 
-    def is_adj_bomb?(x, y, board)
+    def is_adj_bomb?(coord, board)
+        x, y = coord
         size = board.count
-        if x < 0 || x >= board.count || y < 0 || y >= board.count
+        if x < 0 || x >= size || y < 0 || y >= size
             return false
         end
-        board[x, y] == -1 ? true : false
+        return board[y][x] == 'b' ? true : false
     end
 
     def count_adj_bombs(tag, coord, board)
-        return tag if tag == -1
-        x, y = coord
-        tag += 1 if is_adj_bomb?(x + 1, y, board)
-        tag += 1 if is_adj_bomb?(x - 1, y, board)
-        tag += 1 if is_adj_bomb?(x, y + 1, board)
-        tag += 1 if is_adj_bomb?(x, y - 1, board)
+        return tag if tag == 'b'
+        Board.find_adj_coord(coord, board.count).each do |adj_coord|
+            tag += 1 if is_adj_bomb?(adj_coord, board)
+        end
         return tag
     end
 
@@ -48,8 +47,8 @@ class Tile
         @flagged
     end
 
-    def flag
-        @flag = !@flag
+    def toggle_flag
+        @flagged = !@flagged
     end
 
     def is_revealed?
