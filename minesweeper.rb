@@ -9,6 +9,14 @@ class Minesweeper
     @file = nil
   end
 
+  def quit
+  end
+
+  def save
+    filename = @player.enter_filename
+    @board.save_board(filename)
+  end
+
   def new_game
     @board.create_new
   end

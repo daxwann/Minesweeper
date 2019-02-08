@@ -1,5 +1,6 @@
 require_relative "./tile"
 require "colorize"
+require "yaml"
 
 class Board
     def self.find_adj_coord(coord, size)
@@ -25,6 +26,14 @@ class Board
 
     def create_new
         @tiles = create_board(@size, @bombs)
+    end
+
+    def save_board(filename)
+        File.open("#{filename}.yml", "w") do |file|
+            file.write(@tiles.to_yaml)
+        end
+        puts "Game saved to #{filename}.yml"
+        puts
     end
 
     def create_board(size, bombs)
