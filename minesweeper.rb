@@ -5,7 +5,12 @@ require "colorize"
 class Minesweeper
   def initialize()
     @board = Board.new(9, 10)
-    @player = Player.new(9)    
+    @player = Player.new(9)
+    @file = nil
+  end
+
+  def new_game
+    @board.create_new
   end
 
   def start
@@ -59,5 +64,6 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   game = Minesweeper.new
+  game.new_game
   game.start
 end
