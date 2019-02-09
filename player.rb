@@ -9,11 +9,8 @@ class Player
     loop do
       puts "Enter coordinates separated by comma. ex: 'x,y'"
       coord = gets.chomp
-      Minesweeper.quit if command.downcase == 'q'
-      if command.downcase == 's'
-        Minesweeper.save
-        next
-      end
+      exit if coord.downcase == 'q'
+      return 's' if coord.downcase == 's'
       if valid_coord(coord)
         return coord.split(",").map do |c|
           c.to_i - 1
@@ -23,15 +20,47 @@ class Player
     end
   end
 
+  def load_filename
+    loop do
+      puts "Enter name of YAML file. Enter 'return' to main menu"
+      filename = gets.chomp
+      return false if filename.downcase == 'return'
+      return "#{filename}.yml" if File.exists?("#{filename}.yml")
+      puts "File does not exist"
+    end
+  end
+
+  def save_filename
+    loop do
+      puts "Enter name of YAML file. Enter 'return' to game"
+      filename = gets.chomp
+      return false if filename.downcase == 'return'
+      if File.exists?("#{filename}.yml")
+        if self.overwrite_file?
+          return "#{filename}.yml"
+        else
+          next
+        end
+      end
+      return "#{filename}.yml"
+    end
+  end
+
+  def overwrite_file?
+    loop do
+      puts "File exists. Do you want to overwrite file? y/n"
+      overwrite = gets.chomp
+      return true if overwrite.downcase == 'y'
+      return false if overwrite.downcase == 'n'
+    end
+  end
+
   def get_command
     loop do
       puts "Enter 'r' to reveal or 'f' to flag:"
       command = gets.chomp
-      Minesweeper.quit if command.downcase == 'q'
-      if command.downcase == 's'
-        Minesweeper.save
-        next
-      end
+      exit if command.downcase == 'q'
+      return 's' if command.downcase == 's'
       return command if self.valid_command(command)
       puts "Command is not valid. Try again."
     end

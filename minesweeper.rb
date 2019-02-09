@@ -3,22 +3,48 @@ require_relative "player"
 require "colorize"
 
 class Minesweeper
+ 
   def initialize()
     @board = Board.new(9, 10)
     @player = Player.new(9)
     @file = nil
   end
 
-  def quit
-  end
-
-  def save
-    filename = @player.enter_filename
-    @board.save_board(filename)
-  end
-
   def new_game
     @board.create_new
+  end
+
+  def load_game
+    file = @player.load_filename
+    @board.load_board(file) if file
+  end
+
+  def options
+    loop do 
+      system("clear")
+      puts "Minesweeper".colorize(:cyan)
+      puts
+      puts "Enter 'n' for new game".colorize(:green)
+      puts "Enter 'l' to load game".colorize(:green)
+      puts "Enter 'q' to quit".colorize(:green)
+      puts
+      choice = gets.chomp
+      if choice.downcase == 'n'
+        self.new_game
+        break
+      elsif choice.downcase == 'l'
+        self.load_game
+        break
+      elsif choice.downcase == 'q'
+        exit
+      end
+    end
+    self.start
+  end
+
+  def save_game
+    file = @player.save_filename
+    @board.save_board(file) if file
   end
 
   def start
@@ -26,7 +52,15 @@ class Minesweeper
       system("clear")
       @board.render
       coord = @player.get_coordinate
+      if coord == 's'
+        self.save_game
+        next
+      end
       command = @player.get_command
+      if command == 's'
+        self.save_game
+        next
+      end
       if !self.safe_pick?(coord, command)
         self.game_over()
         return
@@ -72,6 +106,5 @@ end
 
 if __FILE__ == $PROGRAM_NAME
   game = Minesweeper.new
-  game.new_game
-  game.start
+  game.options
 end

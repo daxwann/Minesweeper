@@ -28,12 +28,23 @@ class Board
         @tiles = create_board(@size, @bombs)
     end
 
-    def save_board(filename)
-        File.open("#{filename}.yml", "w") do |file|
+    def save_board(file)
+        File.open(file, "w") do |file|
             file.write(@tiles.to_yaml)
         end
-        puts "Game saved to #{filename}.yml"
+        puts "Game saved to #{file}"
         puts
+    end
+
+    def load_board(file)
+        @tiles = YAML.load_file(file)
+        if !@tiles
+            puts "File not loaded"
+            sleep(2)
+        else
+            puts "File loaded successfully"
+            sleep(2)
+        end
     end
 
     def create_board(size, bombs)
@@ -64,7 +75,13 @@ class Board
         return tiles
     end
 
+    def options
+        puts "Enter 's' to save".cyan
+        puts "Enter 'q' to quit".cyan
+    end
+
     def render
+        self.options
         puts
         puts "   1 2 3 4 5 6 7 8 9"
         puts "   - - - - - - - - -".colorize(:light_magenta)
